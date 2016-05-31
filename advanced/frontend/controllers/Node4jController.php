@@ -108,12 +108,20 @@ class Node4jController extends Controller {
 
             $nodeIndex = new NodeIndex($client, Index::TypeNode, 'Employee');
             $nodeIndex->add($node, 'lastname', $properties['lastname']);
-
-            return $this->render('all_nodes');
+            $nodes =   $client->makeLabel('Employee')->getNodes();
+            return $this->render('all_nodes',['nodes'=>$nodes]);
         } else {
 
             return $this->render('node_form');
         }
+    }
+    public function actionNodes() {
+        $client = new Client('localhost', 7474);
+            $client->getTransport()->setAuth('neo4j', '123456');
+         $nodes =   $client->makeLabel('Employee')->getNodes();
+     
+        //$nodes = $client->getNodesForLabel($client->makeLabel('Employee'));
+        return $this->render('all_nodes',['nodes'=>$nodes]);
     }
 
 }

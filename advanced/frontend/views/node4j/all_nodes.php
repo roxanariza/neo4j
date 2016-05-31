@@ -6,3 +6,6 @@
  * and open the template in the editor.
  */
 
+ foreach($nodes as $nod){
+     echo $nod->getProperty('firstname').' '.$nod->getProperty('lastname').'  --  '.$nod->getProperty('position').'<br/>';
+ }

@@ -28,18 +28,18 @@ $client->getTransport()->setAuth('neo4j', '123456');
 
 <?php
 //$client = new Client('tsartsaris.gr', 7474);
-$queryString = "START n=node(216) ".
-    "MATCH (n)-[:FOLLOW]->(x:Employee)".
-    "RETURN n,x";
+$queryString = "START n=node(*) MATCH (n:Employee)-[r:FOLLOW]->(x:Employee) RETURN n,r,x;";
 $query = new Everyman\Neo4j\Cypher\Query($client, $queryString);
 $result = $query->getResultSet();
 //var_dump($result);
 $fbnodes=$links=  array();
 $i = 0;
+ 
 foreach ($result as $row) {  //iterate the result set
-    $node_name=$row['x']->getProperty('firstname'); //get node name
-    $node_image=$row['x']->getProperty('lastname');  //get node profile image url
-    $node_url=$row['x']->getProperty('position'); //get node profile link url
+    //var_dump();
+    $node_name=$row['n']->getProperty('firstname'); //get node name
+    $node_image=$row['n']->getProperty('lastname');  //get node profile image url
+    $node_url=$row['n']->getProperty('position'); //get node profile link url
     $single_node['firstname']=$node_name;  //put them in the array
     $single_node['lastname']=$node_image;
     $single_node['login']=$node_url;
@@ -51,6 +51,7 @@ foreach ($result as $row) {  //iterate the result set
     $i=$i+1;  //increase the counter by one to be used for the next node
     array_push($links,$single_link);  //put the single link array to the links array
 }
+
 $dataset['nodes']=$fbnodes;  //putting the nodes array in the dataset with key value "nodes"
 $dataset['links']=$links;  //putting the links array in the dataset with key value of "links"
 $json = json_encode($dataset, JSON_PRETTY_PRINT); //create the json file, to use the pretty print you have to use version>php5.4
